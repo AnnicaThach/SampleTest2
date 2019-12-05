@@ -23,7 +23,14 @@ export class ContactComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.contacts = await this.loadContactsFromJson();
+    console.log('this.contacts from ngOninit...', this.contacts);
 
+  }
+
+  async loadContactsFromJson() {
+    const contacts = await this.http.get('assets/contacts.json').toPromise();
+    return contacts.json();
   }
 
 }
