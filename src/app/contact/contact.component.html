@@ -1,9 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary main-nav">
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <form class="form-inline my-2 my-lg-0 search-form">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+      <input [(ngModel)]="params" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
       <div class="btn-group">
-        <button mat-raised-button color="basic">Search</button> &nbsp;
+        <button mat-raised-button color="basic" (click)="search(params)">Search</button> &nbsp;
       </div>
     </form>
   </div>
@@ -11,13 +11,13 @@
 
 <ul class="nav justify-content-end nav-action-container">
   <li class="nav-item">
-    <button mat-raised-button color="primary">Load Contacts</button>
+    <button mat-raised-button color="primary"(click)="loadContacts()">Load Contacts</button>
   </li>
   <li class="nav-item">
     <button mat-raised-button color="primary" (click)="addContact()">Add Contact</button>
   </li>
   <li class="nav-item">
-    <button mat-raised-button color="primary">Finalize</button>
+    <button mat-raised-button color="primary" (click)="finalize()">Finalize</button>
   </li>
 </ul>
 
@@ -56,8 +56,8 @@
         </p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button color="primary">Save</button>
-        <button mat-raised-button color="warn">Delete</button>
+        <button mat-raised-button color="primary"(click)="saveToLocalStorage()">Save</button>
+        <button mat-raised-button color="warn"(click)="deleteContact(i)">Delete</button>
       </mat-card-actions>
     </mat-card>
   </div>

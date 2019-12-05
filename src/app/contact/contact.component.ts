@@ -23,6 +23,7 @@ export interface IContact {
 export class ContactComponent implements OnInit {
 
   contacts: Array<IContact> = [];
+  params: string;
   constructor(
     // tslint:disable-next-line: deprecation
     private http: Http,
@@ -33,14 +34,20 @@ export class ContactComponent implements OnInit {
   }
 
   async ngOnInit() {
-    const contacts = JSON.parse(localStorage.getItem('contacts'));
+    this.contacts = await this.loadContacts();
+
+  }
+
+  async loadContacts() {
+    let contacts = JSON.parse(localStorage.getItem('contacts'));
     if (contacts && contacts.length > 0) {
-      this.contacts = contacts;
+      // contacts = contacts;
     } else {
-    this.contacts = await this.loadContactsFromJson();
+    contacts = await this.loadContactsFromJson();
     }
     console.log('this.contacts from ngOninit...', this.contacts);
-
+    this.contacts = contacts;
+    return contacts;
   }
 
   async loadContactsFromJson() {
@@ -58,7 +65,46 @@ export class ContactComponent implements OnInit {
       owed: null
     };
     this.contacts.unshift(contact);
+    this.saveToLocalStorage();
+  }
+
+  deleteContact(index: number) {
+    this.contacts.splice(index, 1);
+    this.saveToLocalStorage();
+  }
+
+  saveToLocalStorage() {
     localStorage.setItem('contacts', JSON.stringify(this.contacts));
   }
+
+  finalize() {
+    console.log('from finalize...');
+    const data = this.calculate();
+    localStorage.setItem('calculatedData', JSON.stringify(data));
+    this.router.navigate(['home', data]);
+  }
+
+  calculate() {
+    let owed = 0;
+    for (let i = 0; i < this.contacts.length; i++ ) {
+      // console.log('i--->', i, "this.contacts[i]", this.contacts[i]);
+      owed += this.contacts[i].owed;
+      console.log('owed---->', owed);
+    }
+    return {
+      numberOfContacts: this.contacts.length,
+      subTotal: owed,
+      taxAmount: owed * .10,
+      total: owed + (owed * .10)
+    };
+
+  }
+  search(params: string) {
+    console.log('from search.... params', params);
+    this.contacts.filter((contact: IContact) => {
+      return contact.firstName.toLowerCase() === params.toLowerCase();
+    });
+  }
+
 
 }
